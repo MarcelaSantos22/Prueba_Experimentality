@@ -10,6 +10,10 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Created by Yuri Quejada on 7/06/2017.
+ */
+
 public class MainActivity extends AppCompatActivity {
     private EditText ip;
     private Pattern pattern;
@@ -24,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Validate the Ip Address entered
+     */
     public boolean validateIP(String ip){
         String regular_expression =
                 "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
@@ -36,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         return matcher.matches();
     };
 
+    /**
+     * Send Ip Address for client connection
+     */
     public void connection(View v) {
         boolean isValid = validateIP(ip.getText().toString());
         if (isValid){

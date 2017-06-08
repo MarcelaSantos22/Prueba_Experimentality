@@ -23,28 +23,23 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
- * Created by admin on 7/06/2017.
+ * Created by Yuri Quejada on 7/06/2017.
  */
 
 public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
-    //static String MQTTHOST = "tcp://192.168.1.52:1883";
     String topicSrt = "hello/world";
     boolean toggle = false;
 
     private String msn;
     private TextView getMessage;
     private Button btnDiscon;
-    private Button btnConn;
 
     MqttAndroidClient client;
 
     private static final int RECOVERY_REQUEST = 1;
     private YouTubePlayerView youTubeView;
     private YouTubePlayer player;
-
-    //String clientId;
-    //String MQTTHOST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +48,12 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
 
         getMessage = (TextView) findViewById(R.id.tvMessage);
         btnDiscon = (Button) findViewById(R.id.btn_disconnect);
-        btnConn = (Button) findViewById(R.id.btn_connect);
 
         youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_player);
         youTubeView.initialize(Config.YOUTUBE_API_KEY, this);
 
         String MQTTHOST = getIntent().getExtras().getString("host");
         String clientId = MqttClient.generateClientId();
-        Log.d("HOSTTTCo", MQTTHOST);
 
         btnDiscon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +62,7 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
             }
         });
 
+        //Created a client conection
         client = new MqttAndroidClient(this.getApplicationContext(), MQTTHOST, clientId);
         try {
             IMqttToken token = client.connect();
@@ -91,8 +85,11 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
         } catch (MqttException e) {
             e.printStackTrace();
         }
-
     }
+
+    /**
+     * Show message posted by Broker
+     */
     public void showMessage() {
         client.setCallback(new MqttCallback() {
             @Override
@@ -105,7 +102,6 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
                 msn = new String(message.getPayload());
                 getMessage.setText(msn);
                 playOrPause();
-                //pub();
             }
 
             @Override
@@ -115,6 +111,9 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
         });
     }
 
+    /**
+     * Pause and play video when a message arrives from the broker
+     */
     public void playOrPause(){
         Log.d(String.valueOf(toggle), "messageArrived: inicio");
         if(toggle){
@@ -129,7 +128,9 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
         toggle = !toggle;
     }
 
-
+    /**
+     * Publish a message
+     */
     public void pub() {
         String topic = topicSrt;
         try {
@@ -140,8 +141,10 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
         }
     }
 
+    /**
+     * Subscribe to a topic
+     */
     private void setSubscription() {
-       // client = new MqttAndroidClient(this.getApplicationContext(), MQTTHOST, clientId);
         try {
             client.subscribe(topicSrt, 0);
         } catch (MqttException e) {
@@ -149,8 +152,10 @@ public class ConectionMqtt extends YouTubeBaseActivity implements YouTubePlayer.
         }
     }
 
+    /**
+     * Disconnect the client
+     */
     public void disconnection(View v) {
-        Log.d("HOSTTTCoooCli", String.valueOf(client));
         try {
             IMqttToken token = client.disconnect();
             token.setActionCallback(new IMqttActionListener() {

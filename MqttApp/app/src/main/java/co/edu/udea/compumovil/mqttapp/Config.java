@@ -1,7 +1,8 @@
 package co.edu.udea.compumovil.mqttapp;
 
 /**
- * Created by admin on 7/06/2017.
+ * Created by Yuri Quejada on 7/06/2017.
+ * API_KEY for conection with Youtube
  */
 
 public class Config {
