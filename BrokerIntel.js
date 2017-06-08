@@ -27,7 +27,6 @@
      //Subscribe to a topic
      client.subscribe('hello/world', function () {
          client.on('message', function (topic, message, packet) {
-
              if (message == "on") {
                  led.on();
              } else {
@@ -36,7 +35,6 @@
              console.log("Received '" + message + "' on '" + topic + "'");
          });
      });
-
      button.on("press", function () {
          //Publish a message to a topic
          client.publish('hello/world', 'On', function () {
